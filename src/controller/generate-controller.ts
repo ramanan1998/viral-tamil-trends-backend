@@ -20,7 +20,8 @@ const zodSchema = z.object({
     z.object({
         topic: z.string(),
         hook: z.string(),
-        script: z.array(z.object({ personA: z.string(), personB: z.string() })),
+        // script: z.array(z.object({ personA: z.string(), personB: z.string() })),
+        script: z.string(),
         cta: z.string(),
         hashtags: z.string().array(),
         caption: z.string()
@@ -35,11 +36,10 @@ export const generateQuery = async (req: Request, res: Response) => {
     try{
 
         const { query } = req.query;
-        
+
         const prompt = PromptTemplate.fromTemplate(`
             You are a Tamil content writer. 
             Generate a viral 25-sec script. 
-            Assume person A and person B having energetic, funny conversation for creating a viral video. 
             write in tamil words.
             - DO NOT hallucinate products — respond ONLY using the query.
             Tone: Energetic, Tamil slang mixing English lightly.
@@ -58,3 +58,6 @@ export const generateQuery = async (req: Request, res: Response) => {
         res.status(500).json(error)
     }
 };
+
+
+// Assume person A and person B having energetic, funny conversation for creating a viral video. 
