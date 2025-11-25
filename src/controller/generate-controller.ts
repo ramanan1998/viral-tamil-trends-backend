@@ -14,18 +14,24 @@ const llm = new ChatGoogleGenerativeAI({
 });
 
 
+// const zodSchema = z.object({
+//   query: z.string(),
+//   content: z.array(
+//     z.object({
+//         topic: z.string(),
+//         hook: z.string(),
+//         // script: z.array(z.object({ personA: z.string(), personB: z.string() })),
+//         script: z.string(),
+//         cta: z.string(),
+//         hashtags: z.string().array(),
+//         caption: z.string()
+//       })
+//   ),
+// });
+
 const zodSchema = z.object({
-  query: z.string(),
   content: z.array(
-    z.object({
-        topic: z.string(),
-        hook: z.string(),
-        // script: z.array(z.object({ personA: z.string(), personB: z.string() })),
-        script: z.string(),
-        cta: z.string(),
-        hashtags: z.string().array(),
-        caption: z.string()
-      })
+    z.string()
   ),
 });
 
@@ -35,22 +41,23 @@ export const generateQuery = async (req: Request, res: Response) => {
 
     try{
 
-        const { query } = req.query;
+        const { trending, language, writingStyle, platform, videoLength, numberOfVariations, trendingKeywords, content } = req.query;
 
         const prompt = PromptTemplate.fromTemplate(`
-            You are a Tamil content writer. 
-            Generate a viral 25-sec script. 
-            write in tamil words.
+            Assume person A and person B having {writingStyle} conversation in {language} for creating a viral video on {platform}
+            Generate a viral {videoLength} script. 
             - DO NOT hallucinate products — respond ONLY using the query.
-            Tone: Energetic, Tamil slang mixing English lightly.
-            Topic: {query}
-            Start with a strong hook.
-            End with a punchline.
+            - Tone: {writingStyle}, {language} slang mixing English lightly.
+            - Topic: {trending} - {content}
+            - Strictly include these keywords in the script: {trendingKeywords}
+            - Start with a strong hook.
+            - End with a punchline.
+            - Give me {numberOfVariations} variations to select better script in an array. eg: [ "variation1", "variation2", "variation3" ]
             - If data is found, summarize the key details in {format_instructions}.
         `);
 
         const pipe = prompt.pipe(llm).pipe(parser);
-        const result = await pipe.invoke({ query, format_instructions: parser.getFormatInstructions() });
+        const result = await pipe.invoke({ trending, language, writingStyle, platform, videoLength, numberOfVariations, trendingKeywords, content, format_instructions: parser.getFormatInstructions() });
         res.send(result)
 
     }catch(error){
