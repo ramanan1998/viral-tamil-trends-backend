@@ -3,8 +3,10 @@ import cors from "cors";
 import mongoose from "mongoose";
 import "dotenv/config";
 import generateRoutes from "./routes/generate";
+import authRoutes from "./routes/auth";
+import userRoutes from "./routes/user";
 
-// mongoose.connect(process.env.MONGO_URI as string).then(() => console.log("DB connected successfully")).catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URI as string).then(() => console.log("DB connected successfully")).catch(err => console.log(err));
 
 const PORT = 5000;
 const app = express();
@@ -17,6 +19,8 @@ app.use(
   })
 );
 
+app.use("/api/auth", authRoutes)
+app.use("/api/user", userRoutes)
 app.use("/api/generate", generateRoutes)
 
 app.get("/", (req: Request, res: Response) => {

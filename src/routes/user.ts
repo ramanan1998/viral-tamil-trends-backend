@@ -1,8 +1,9 @@
 import express from "express";
-import { getTotalUsers } from "../controller/user-controller";
+import { getUser } from "../controller/user-controller";
+import { verifyToken } from "../middlewares/verifyToken";
 
 const router = express.Router();
 
-router.get("/", getTotalUsers)
+router.get("/getUser", verifyToken, getUser)
 
 export default router;
