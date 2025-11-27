@@ -54,13 +54,13 @@ export const signup = async (req: Request, res: Response) => {
             if (error) {
                 console.log(error);
                 res.status(500).json({ message: "internal server error" });
+                return;
             } else {
                 console.log('Email sent: ' + info.response);
-                res.status(200).json({ message: "your password is changed, please check your email for the updated password" });
+                res.status(200).json({ message: "user created successfully" });
+                return;
             }
         });
-
-        res.status(200).json({ message: "user created successfully" });
 
     }catch(error){
         console.log(error);
