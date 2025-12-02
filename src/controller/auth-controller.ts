@@ -34,33 +34,25 @@ export const signup = async (req: Request, res: Response) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-            //   user: process.env.CLIENT_EMAIL,
-            //   pass: process.env.SECURITY_APP_PASSWORD
-              user: "ramanan.works@blackwinstech.com",
-              pass: "qhon zorj gztl fxrf"
+              user: "contactus@blackwinstech.com",
+              pass: "douw kwoz azwi ctes"
             },
             tls : { rejectUnauthorized: false }
         });
   
         const mailOptionsToSender = {
             // from: process.env.CLIENT_EMAIL,
-            from: "ramanan.works@blackwinstech.com",
+            from: "contactus@blackwinstech.com",
             to: email,
             subject: "Your Login Credentials",
             html: emailTemplate({ email, password, appName: "Scriptify", username })
         }
   
-        transporter.sendMail(mailOptionsToSender, function(error, info){
-            if (error) {
-                console.log(error);
-                res.status(500).json({ message: "internal server error" });
-                return;
-            } else {
-                console.log('Email sent: ' + info.response);
-                res.status(200).json({ message: "user created successfully" });
-                return;
-            }
-        });
+        const mail = await transporter.sendMail(mailOptionsToSender);
+
+        console.log('Email sent: ' + mail.response);
+
+        res.status(200).json({ message: "user created successfully" });
 
     }catch(error){
         console.log(error);
