@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import { emailTemplate } from "../helper/templates";
 import { generatePassword } from "../helper/passwordGenerator";
+import { Resend } from "resend";
+import sgMail from "@sendgrid/mail";
 
 export const signup = async (req: Request, res: Response) => {
 
@@ -31,6 +33,31 @@ export const signup = async (req: Request, res: Response) => {
             isActive: true,
         });
 
+        // const resend = new Resend(process.env.RESEND_API_KEY);
+
+        // await resend.emails.send({
+        //     from: "contactus@blackwinstech.com",
+        //     to: email,
+        //     subject: "Your Login Credentials",
+        //     html: emailTemplate({ email, password, appName: "Scriptify", username }),
+        // });
+
+        // sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+
+        // const msg = {
+        //     to: email,
+        //     from: `Scriptify <${process.env.EMAIL_FROM}>`, // Must be verified in SendGrid
+        //     subject: "Your Login Credentials",
+        //     html: emailTemplate({
+        //         email,
+        //         password,
+        //         appName: "Scriptify",
+        //         username
+        //     }),
+        // };
+
+        // await sgMail.send(msg as any);
+
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -54,9 +81,11 @@ export const signup = async (req: Request, res: Response) => {
 
         res.status(200).json({ message: "user created successfully" });
 
+        res.status(200).json({ message: "user created successfully" });
+
     }catch(error){
         console.log(error);
-        res.status(500).json({ message: "internal server error" })
+        res.status(500).json({ message: error })
     }
 }
 
